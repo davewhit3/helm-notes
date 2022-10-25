@@ -1,0 +1,9 @@
+name: "notes"
+version: "3.6.0"
+usage: "Preview helm Notes.txt"
+description: "Preview helm Notes.txt"
+useTunnel: true
+command: "$HELM_PLUGIN_DIR/bin/notes"
+hooks:
+  install: "$HELM_PLUGIN_DIR/install-binary.sh"
+  update: "$HELM_PLUGIN_DIR/install-binary.sh -u"
