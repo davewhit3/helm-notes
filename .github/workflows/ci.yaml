@@ -39,7 +39,6 @@ jobs:
         run: |
           mkdir -p helmhome
           make install HELM_HOME=helmhome
-          helmhome/plugins/helm-diff/bin/diff version
 
   helm-install:
     name: helm install
