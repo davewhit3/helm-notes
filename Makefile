@@ -58,21 +58,21 @@ docker-run-release:
 dist: export COPYFILE_DISABLE=1 #teach OSX tar to not put ._* files in tar archive
 dist: export CGO_ENABLED=0
 dist:
-	rm -rf build/notes/* release/*
-	mkdir -p build/notes/bin release/
-	cp README.md plugin.yaml build/notes
-	GOOS=linux GOARCH=amd64 $(GO) build -o build/notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
+	rm -rf build/helm-notes/* release/*
+	mkdir -p build/helm-notes/bin release/
+	cp README.md plugin.yaml build/helm-notes
+	GOOS=linux GOARCH=amd64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-linux-amd64.tgz notes/
-	GOOS=linux GOARCH=arm64 $(GO) build -o build/notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
+	GOOS=linux GOARCH=arm64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-linux-arm64.tgz notes/
-	GOOS=freebsd GOARCH=amd64 $(GO) build -o build/notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
+	GOOS=freebsd GOARCH=amd64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-freebsd-amd64.tgz notes/
-	GOOS=darwin GOARCH=amd64 $(GO) build -o build/notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
+	GOOS=darwin GOARCH=amd64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-macos-amd64.tgz notes/
-	GOOS=darwin GOARCH=arm64 $(GO) build -o build/notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
+	GOOS=darwin GOARCH=arm64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-macos-arm64.tgz notes/
-	rm build/notes/bin/notes
-	GOOS=windows GOARCH=amd64 $(GO) build -o build/notes/bin/notes.exe -trimpath -ldflags="$(LDFLAGS)"
+	rm build/helm-notes/bin/notes
+	GOOS=windows GOARCH=amd64 $(GO) build -o build/helm-notes/bin/notes.exe -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-windows-amd64.tgz notes/
 
 .PHONY: release
