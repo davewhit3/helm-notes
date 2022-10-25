@@ -128,6 +128,7 @@ installFile() {
   tar xzf "$PLUGIN_TMP_FILE" -C "$HELM_TMP"
   HELM_TMP_BIN="$HELM_TMP/$PROJECT_NAME/bin/notes"
   echo "Preparing to install into ${HELM_PLUGIN_DIR}"
+  find $HELM_TMP
   mkdir -p "$HELM_PLUGIN_DIR/bin"
   cp "$HELM_TMP_BIN" "$HELM_PLUGIN_DIR/bin"
 }
