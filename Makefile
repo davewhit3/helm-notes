@@ -60,7 +60,7 @@ dist: export CGO_ENABLED=0
 dist:
 	rm -rf build/notes/* release/*
 	mkdir -p build/notes/bin release/
-	cp README.md LICENSE plugin.yaml build/notes
+	cp README.md plugin.yaml build/notes
 	GOOS=linux GOARCH=amd64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-linux-amd64.tgz notes/
 	GOOS=linux GOARCH=arm64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"

@@ -1,5 +1,5 @@
 name: "notes"
-version: "3.6.0"
+version: "1.0.0"
 usage: "Preview helm Notes.txt"
 description: "Preview helm Notes.txt"
 useTunnel: true
