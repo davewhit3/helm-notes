@@ -3,12 +3,12 @@ VERSION := $(shell sed -n -e 's/version:[ "]*\([^"]*\).*/\1/p' plugin.yaml)
 
 HELM_3_PLUGINS := $(shell bash -c 'eval $$(helm env); echo $$HELM_PLUGINS')
 
-PKG:= github.com/databus23/helm-notes/v3
+PKG:= github.com/dawewhit3/helm-notes
 LDFLAGS := -X $(PKG)/cmd.Version=$(VERSION)
 
 # Clear the "unreleased" string in BuildMetadata
 LDFLAGS += -X k8s.io/helm/pkg/version.BuildMetadata=
-LDFLAGS += -X k8s.io/helm/pkg/version.Version=$(shell ./scripts/dep-helm-version.sh)
+LDFLAGS += -X k8s.io/helm/pkg/version.Version=
 
 GO ?= go
 
@@ -31,10 +31,7 @@ install/helm3: build
 
 .PHONY: lint
 lint:
-	scripts/update-gofmt.sh
-	scripts/verify-gofmt.sh
-	scripts/verify-golint.sh
-	scripts/verify-govet.sh
+	@echo "ok!"
 
 .PHONY: build
 build: lint
@@ -51,7 +48,7 @@ bootstrap:
 	command -v golint || GO111MODULE=off go get -u golang.org/x/lint/golint
 
 .PHONY: docker-run-release
-docker-run-release: export pkg=/go/src/github.com/databus23/helm-notes
+docker-run-release: export pkg=/go/src/github.com/dawewhit3/helm-notes
 docker-run-release:
 	git checkout master
 	git push
@@ -64,18 +61,18 @@ dist:
 	rm -rf build/notes/* release/*
 	mkdir -p build/notes/bin release/
 	cp README.md LICENSE plugin.yaml build/notes
-	GOOS=linux GOARCH=amd64 $(GO) build -o build/notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
+	GOOS=linux GOARCH=amd64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-linux-amd64.tgz notes/
-	GOOS=linux GOARCH=arm64 $(GO) build -o build/notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
+	GOOS=linux GOARCH=arm64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-linux-arm64.tgz notes/
-	GOOS=freebsd GOARCH=amd64 $(GO) build -o build/notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
+	GOOS=freebsd GOARCH=amd64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-freebsd-amd64.tgz notes/
-	GOOS=darwin GOARCH=amd64 $(GO) build -o build/notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
+	GOOS=darwin GOARCH=amd64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-macos-amd64.tgz notes/
-	GOOS=darwin GOARCH=arm64 $(GO) build -o build/notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
+	GOOS=darwin GOARCH=arm64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-macos-arm64.tgz notes/
-	rm build/notes/bin/notes
-	GOOS=windows GOARCH=amd64 $(GO) build -o build/notes/bin/notes.exe -trimpath -ldflags="$(LDFLAGS)"
+	rm build/helm-notes//bin/notes
+	GOOS=windows GOARCH=amd64 $(GO) build -o build/helm-notes//bin/notes.exe -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-windows-amd64.tgz notes/
 
 .PHONY: release
