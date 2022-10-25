@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bialas1993/helm-notes/cmd"
+	"github.com/davewhit3/helm-notes/cmd"
 )
 
 func main() {
