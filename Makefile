@@ -72,7 +72,7 @@ dist:
 	GOOS=darwin GOARCH=arm64 $(GO) build -o build/helm-notes/bin/notes -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-macos-arm64.tgz notes/
 	rm build/helm-notes//bin/notes
-	GOOS=windows GOARCH=amd64 $(GO) build -o build/helm-notes//bin/notes.exe -trimpath -ldflags="$(LDFLAGS)"
+	GOOS=windows GOARCH=amd64 $(GO) build -o build/helm-notes/bin/notes.exe -trimpath -ldflags="$(LDFLAGS)"
 	tar -C build/ -zcvf $(CURDIR)/release/helm-notes-windows-amd64.tgz notes/
 
 .PHONY: release
