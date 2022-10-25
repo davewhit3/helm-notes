@@ -96,6 +96,7 @@ getDownloadURL() {
 mkTempDir() {
   HELM_TMP="$(mktemp -d -t "${PROJECT_NAME}-XXXXXX")"
 }
+
 rmTempDir() {
   if [ -d "${HELM_TMP:-/tmp/helm-notes-tmp}" ]; then
     rm -rf "${HELM_TMP:-/tmp/helm-notes-tmp}"
@@ -116,11 +117,14 @@ downloadFile() {
   then
     wget -q -O - "$DOWNLOAD_URL" >"$PLUGIN_TMP_FILE"
   fi
+
+  echo "Created temp file in $PLUGIN_TMP_FILE"
 }
 
 # installFile verifies the SHA256 for the file, then unpacks and
 # installs it.
 installFile() {
+  echo "Unpacking temp file to $HELM_TMP"
   tar xzf "$PLUGIN_TMP_FILE" -C "$HELM_TMP"
   HELM_TMP_BIN="$HELM_TMP/$PROJECT_NAME/bin/notes"
   echo "Preparing to install into ${HELM_PLUGIN_DIR}"
