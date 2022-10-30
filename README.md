@@ -1,5 +1,5 @@
 # helm-notes
-The helm-note may render the NOTES.txt file without connection to the cluster.
+The helm-notes may render the NOTES.txt file without connection to the cluster.
 
 ## Install
 
