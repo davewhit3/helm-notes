@@ -28,23 +28,82 @@ import (
 
 var settings = cli.New()
 
-func newInstallCmd(cfg *action.Configuration, out io.Writer) *cobra.Command {
+const notesDesc = `
+This command render a chart NOTES.txt file.
+
+The notes argument must be a chart reference, a path to a packaged chart,
+a path to an unpacked chart directory or a URL.
+
+To override values in a chart, use either the '--values' flag and pass in a file
+or use the '--set' flag and pass configuration from the command line, to force
+a string value use '--set-string'. You can use '--set-file' to set individual
+values from a file when the value itself is too long for the command line
+or is dynamically generated.
+
+    $ helm notes -f myvalues.yaml myredis ./redis
+
+or
+
+    $ helm notes --set name=prod myredis ./redis
+
+or
+
+    $ helm notes --set-string long_int=1234567890 myredis ./redis
+
+or
+
+    $ helm notes --set-file my_script=dothings.sh myredis ./redis
+
+You can specify the '--values'/'-f' flag multiple times. The priority will be given to the
+last (right-most) file specified. For example, if both myvalues.yaml and override.yaml
+contained a key called 'Test', the value set in override.yaml would take precedence:
+
+    $ helm notes -f myvalues.yaml -f override.yaml  myredis ./redis
+
+You can specify the '--set' flag multiple times. The priority will be given to the
+last (right-most) set specified. For example, if both 'bar' and 'newbar' values are
+set for a key called 'foo', the 'newbar' value would take precedence:
+
+    $ helm notes --set foo=bar --set foo=newbar  myredis ./redis
+
+
+1. By chart reference: helm notes mymaria example/mariadb
+2. By path to a packaged chart: helm notes mynginx ./nginx-1.2.3.tgz
+3. By path to an unpacked chart directory: helm notes mynginx ./nginx
+4. By absolute URL: helm notes mynginx https://example.com/charts/nginx-1.2.3.tgz
+5. By chart reference and repo url: helm notes --repo https://example.com/charts/ mynginx nginx
+
+CHART REFERENCES
+
+A chart reference is a convenient way of referencing a chart in a chart repository.
+
+When you use a chart reference with a repo prefix ('example/mariadb'), Helm will look in the local
+configuration for a chart repository named 'example', and will then look for a
+chart in that repository whose name is 'mariadb'. It will install the latest stable version of that chart
+until you specify '--devel' flag to also include development version (alpha, beta, and release candidate releases), or
+supply a version number with the '--version' flag.
+
+To see the list of chart repositories, use 'helm repo list'. To search for
+charts in a repository, use 'helm search'.
+`
+
+func newRenderCmd(cfg *action.Configuration, out io.Writer) *cobra.Command {
 	client := action.NewInstall(cfg)
 	valueOpts := &values.Options{}
 	var outfmt output.Format
 
 	cmd := &cobra.Command{
-		Use:   "install [NAME] [CHART]",
-		Short: "install a chart",
-		Long:  "",
+		Use:   "[NAME] [CHART]",
+		Short: "render a chart NOTES.txt file",
+		Long:  notesDesc,
 		Args:  require.MinimumNArgs(1),
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 			return compInstall(args, toComplete, client)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
-			rel, err := runInstall(args, client, valueOpts, out)
+			rel, err := runRender(args, client, valueOpts, out)
 			if err != nil {
-				return errors.Wrap(err, "INSTALLATION FAILED")
+				return errors.Wrap(err, "RENDER FAILED")
 			}
 
 			return outfmt.Write(out, &statusPrinter{rel, settings.Debug, false})
@@ -59,13 +118,9 @@ func newInstallCmd(cfg *action.Configuration, out io.Writer) *cobra.Command {
 }
 
 func addInstallFlags(cmd *cobra.Command, f *pflag.FlagSet, client *action.Install, valueOpts *values.Options) {
-	f.BoolVar(&client.CreateNamespace, "create-namespace", false, "create the release namespace if not present")
-	f.BoolVar(&client.DryRun, "dry-run", false, "simulate an install")
 	f.BoolVar(&client.DisableHooks, "no-hooks", false, "prevent hooks from running during install")
 	f.BoolVar(&client.Replace, "replace", false, "re-use the given name, only if that name is a deleted release which remains in the history. This is unsafe in production")
 	f.DurationVar(&client.Timeout, "timeout", 300*time.Second, "time to wait for any individual Kubernetes operation (like Jobs for hooks)")
-	f.BoolVar(&client.Wait, "wait", false, "if set, will wait until all Pods, PVCs, Services, and minimum number of Pods of a Deployment, StatefulSet, or ReplicaSet are in a ready state before marking the release as successful. It will wait for as long as --timeout")
-	f.BoolVar(&client.WaitForJobs, "wait-for-jobs", false, "if set and --wait enabled, will wait until all Jobs have been completed before marking the release as successful. It will wait for as long as --timeout")
 	f.BoolVarP(&client.GenerateName, "generate-name", "g", false, "generate the name (and omit the NAME parameter)")
 	f.StringVar(&client.NameTemplate, "name-template", "", "specify template used to name the release")
 	f.StringVar(&client.Description, "description", "", "add a custom description")
@@ -94,7 +149,7 @@ func addInstallFlags(cmd *cobra.Command, f *pflag.FlagSet, client *action.Instal
 	}
 }
 
-func runInstall(args []string, client *action.Install, valueOpts *values.Options, out io.Writer) (*release.Release, error) {
+func runRender(args []string, client *action.Install, valueOpts *values.Options, out io.Writer) (*release.Release, error) {
 	if client.Version == "" && client.Devel {
 		client.Version = ">0.0.0-0"
 	}

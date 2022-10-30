@@ -48,7 +48,7 @@ bootstrap:
 	command -v golint || GO111MODULE=off go get -u golang.org/x/lint/golint
 
 .PHONY: docker-run-release
-docker-run-release: export pkg=/go/src/github.com/dawewhit3/helm-notes
+docker-run-release: export pkg=/go/src/github.com/davewhit3/helm-notes
 docker-run-release:
 	git checkout master
 	git push

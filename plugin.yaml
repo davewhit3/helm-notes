@@ -1,7 +1,7 @@
 name: "notes"
-version: "1.0.0"
-usage: "Preview helm Notes.txt"
-description: "Preview helm Notes.txt"
+version: "1.0.1"
+usage: "Render the NOTES.txt helm file without deploying the application"
+description: "Render the NOTES.txt helm file without deploying the application"
 useTunnel: true
 command: "$HELM_PLUGIN_DIR/bin/notes"
 hooks:

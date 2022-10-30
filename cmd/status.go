@@ -1,19 +1,3 @@
-/*
-Copyright The Helm Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package cmd
 
 import (
@@ -26,20 +10,6 @@ import (
 	"helm.sh/helm/v3/pkg/cli/output"
 	"helm.sh/helm/v3/pkg/release"
 )
-
-// NOTE: Keep the list of statuses up-to-date with pkg/release/status.go.
-var statusHelp = `
-This command shows the status of a named release.
-The status consists of:
-- last deployment time
-- k8s namespace in which the release lives
-- state of the release (can be: unknown, deployed, uninstalled, superseded, failed, uninstalling, pending-install, pending-upgrade or pending-rollback)
-- revision of the release
-- description of the release (can be completion message or error message, need to enable --show-desc)
-- list of resources that this release consists of, sorted by kind
-- details on last test suite run, if applicable
-- additional notes provided by the chart
-`
 
 type statusPrinter struct {
 	release         *release.Release

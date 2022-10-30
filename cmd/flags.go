@@ -1,19 +1,3 @@
-/*
-Copyright The Helm Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package cmd
 
 import (
@@ -52,7 +36,7 @@ func addValueOptionsFlags(f *pflag.FlagSet, v *values.Options) {
 func addChartPathOptionsFlags(f *pflag.FlagSet, c *action.ChartPathOptions) {
 	f.StringVar(&c.Version, "version", "", "specify a version constraint for the chart version to use. This constraint can be a specific tag (e.g. 1.1.1) or it may reference a valid range (e.g. ^2.0.0). If this is not specified, the latest version is used")
 	f.BoolVar(&c.Verify, "verify", false, "verify the package before using it")
-	// f.StringVar(&c.Keyring, "keyring", defaultKeyring(), "location of public keys used for verification")
+	f.StringVar(&c.Keyring, "keyring", defaultKeyring(), "location of public keys used for verification")
 	f.StringVar(&c.RepoURL, "repo", "", "chart repository url where to locate the requested chart")
 	f.StringVar(&c.Username, "username", "", "chart repository username where to locate the requested chart")
 	f.StringVar(&c.Password, "password", "", "chart repository password where to locate the requested chart")

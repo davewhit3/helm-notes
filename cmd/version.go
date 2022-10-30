@@ -12,7 +12,7 @@ var Version = "HEAD"
 func newVersionCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",
-		Short: "Show version of the helm diff plugin",
+		Short: "Show version of the helm notes plugin",
 		Run: func(*cobra.Command, []string) {
 			fmt.Println(Version)
 		},
